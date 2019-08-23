@@ -14,6 +14,11 @@ A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algo
 Test map data
 
 No obstacles
+
+
+
+
+
 ![image](https://github.com/codingx-2019-team4/ShortestPath/blob/master/test%20map/7x7map_1.JPG)
 
 Have obstacles
