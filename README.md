@@ -9,3 +9,5 @@ Spot.java : definite the spots.
 SpotSort.java : adjust the matrix's content(ex. push,remove..).
 
 A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
+
+https://github.com/codingx-2019-team4/ShortestPath/blob/master/test%20map/7x7map_1.JPG
