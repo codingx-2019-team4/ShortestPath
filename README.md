@@ -12,7 +12,7 @@ A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algo
 
 
 
-[\b]Test map data
+![\b]Test map data
 
 No obstacles
 
