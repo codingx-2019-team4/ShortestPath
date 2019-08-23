@@ -11,7 +11,8 @@ SpotSort.java : adjust the matrix's content(ex. push,remove..).
 A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
 
 
-Test map data
+
+[\b]Test map data
 
 No obstacles
 
