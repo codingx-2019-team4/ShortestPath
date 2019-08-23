@@ -22,4 +22,9 @@ No obstacles
 ![image](https://github.com/codingx-2019-team4/ShortestPath/blob/master/test%20map/7x7map_1.JPG)
 
 Have obstacles
+
+
+
+
+
 ![image](https://github.com/codingx-2019-team4/ShortestPath/blob/master/test%20map/7x7map_2.JPG)
