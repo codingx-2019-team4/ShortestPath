@@ -8,4 +8,4 @@ Spot.java : definite the spots.
 
 SpotSort.java : adjust the matrix's content(ex. push,remove..).
 
-Reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
+A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
