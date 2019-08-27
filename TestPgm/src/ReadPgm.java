@@ -51,7 +51,8 @@ public class ReadPgm {
 		int topEdge = -1;
 		int botEdge = -1;
 		int mapBGColor = 205; // 地圖的背景色
-		int[] humanPosition = { picHeight / 2, picWidth / 2 };  //初始原點
+		int[] humanPosition = {  picWidth / 2 , picHeight / 2 }; // 人所在的位置
+		int[] start = new int[] { humanPosition[0], humanPosition[1] }; // 起點
 //		尋找地圖的上下左右邊界
 		for (int row = 0; row < picHeight; row++) {
 			for (int col = 0; col < picWidth; col++) {
@@ -86,13 +87,22 @@ public class ReadPgm {
 //		     System.out.println();
 		}
 
-//		標記人在哪
-		int red = new Color(255, 0, 0).getRGB();
+//		標記人在哪以及出口位置(從原點出發，x+ 方向往右，y+ 方向往下)
+//		一般二維矩陣row代表y軸，col代表x軸，所以在setRGB2的參數中需替換過來(如84行)
+		int startColor = new Color(255, 0, 0).getRGB();  //紅色
+		int endColor = new Color(0, 255, 0).getRGB();	 //綠色
+		int[] door1 = new int[] { start[0] -  28, start[1] - 127 };
+		int[] door2 = new int[] { start[0] +  93, start[1] - 126 };
+		int[] door3 = new int[] { start[0] + 208, start[1] - 42 };
 		int pointSize = 3;
 		for (int i = -pointSize; i <= pointSize; i++) {
 			for (int j = -pointSize; j <= pointSize; j++) {
-				if ((Math.pow(i, 2) + Math.pow(j, 2) <= Math.pow(pointSize, 2)))
-					image.setRGB(humanPosition[1] + j, humanPosition[0] + i, red);
+				if ((Math.pow(i, 2) + Math.pow(j, 2) <= Math.pow(pointSize, 2))) {
+					image.setRGB(humanPosition[1] + j, humanPosition[0] + i, startColor);
+					image.setRGB(door1[0] + j, door1[1] + i, endColor);
+					image.setRGB(door2[0] + j, door2[1] + i, endColor);
+					image.setRGB(door3[0] + j, door3[1] + i, endColor);
+				}
 			}
 		}
 
