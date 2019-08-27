@@ -10,7 +10,7 @@ SpotSort.java : adjust the matrix's content(ex. push,remove..).
 
 A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
 
-
+地圖資訊 : 往右為x+ ,往下為y+
 ----------------------------------------------------------------------------------------------------------
 Test map data:
 
