@@ -7,19 +7,19 @@ public class Information {
 		
 	}
 	
-	public static int[][] testData1(){
+	public int[][] testData1(){
 		int[][] map = new int[7][7];
-		int start = 0;
-		int end = 1;
+		int start = -1;
+		int end = -2;
 		map[5][1] = start;
 		map[2][5] = end;
 		return map;
 	}
 	
-	public static int[][] testData2(){
+	public int[][] testData2(){
 		int[][] map = new int[7][7];
-		int start = 0;
-		int end = 1;
+		int start = -1;
+		int end = -2;
 		int obstacle = 1000000;
 		map[5][1] = start;
 		map[2][5] = end;

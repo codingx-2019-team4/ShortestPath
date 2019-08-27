@@ -1,30 +1,32 @@
 
 public class Spot {
-	private int g; // 起點隨著路徑走到此點的距離
-	private int h; // 此點到終點的距離(預期的，不算障礙物)
+	public int g; // 起點隨著路徑走到此點的距離
+	public int h; // 此點到終點的距離(預期的，不算障礙物)
 	private int now_x;   //現在的x值
 	private int now_y;   //現在的y值
-	private boolean chosen;
-	private boolean nextStep;
-	private boolean isObstacle;
-	private int item;
-	private Spot parent = new Spot();
+//	private boolean chosen;
+//	private boolean nextStep;
+	private boolean obstacle;
+//	private int item;
+	private Spot parent;
 
 	
-	public void Spot() {
+	public Spot() {
 		this.g = 0;
 		this.h = 0;
-		this.isObstacle = false;
+		this.obstacle = false;
 		parent = null;
 	}
-	public void Spot(int now_x, int now_y) {
+	
+	
+	public Spot(int now_x, int now_y) {
 		this.g = 0;
 		this.h = 0;
 		this.now_x = now_x;
 		this.now_y = now_y;
-		this.chosen = false;
-		this.nextStep = false;
-		this.isObstacle = false;
+//		this.chosen = false;
+//		this.nextStep = false;
+		this.obstacle = false;
 		parent = null;
 	}
 	
@@ -33,8 +35,11 @@ public class Spot {
 		return coordinate;
 	}
 	
-	public void becomeObstacle() {
-		this.isObstacle = true;
+	public void setObstacle(boolean b) {
+		this.obstacle = b;
+	}
+	public boolean isObstacle() {
+		return obstacle;
 	}
 
 	public boolean isEmpty() {
