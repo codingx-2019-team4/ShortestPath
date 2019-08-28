@@ -1,9 +1,9 @@
 
 public class Spot {
-	public int g; // °_ÂIÀHµÛ¸ô®|¨«¨ì¦¹ÂIªº¶ZÂ÷
-	public int h; // ¦¹ÂI¨ì²×ÂIªº¶ZÂ÷(¹w´Áªº¡A¤£ºâ»ÙÃªª«)
-	private int now_x;   //²{¦bªºx­È
-	private int now_y;   //²{¦bªºy­È
+	public int g; // èµ·é»éš¨è‘—è·¯å¾‘èµ°åˆ°æ­¤é»çš„è·é›¢
+	public int h; // æ­¤é»åˆ°çµ‚é»çš„è·é›¢(é æœŸçš„ï¼Œä¸ç®—éšœç¤™ç‰©)
+	private int now_x;   //ç¾åœ¨çš„xå€¼
+	private int now_y;   //ç¾åœ¨çš„yå€¼
 //	private boolean chosen;
 //	private boolean nextStep;
 	private boolean obstacle;
@@ -51,9 +51,9 @@ public class Spot {
 
 	public int compareTo(Spot spot) {
 		if(this.g + this.h < spot.g + spot.h)
-			return -1;   //¨ä¥Lªºspot­È¤ñ²{¦bªº¤j¡A¤£¿ï¥L
+			return -1;   //å…¶ä»–çš„spotå€¼æ¯”ç¾åœ¨çš„å¤§ï¼Œä¸é¸ä»–
 		else
-			return 1;    //¨ä¥Lªºspot­È¤ñ²{¦bªº¤p¡A¥ı¿ï¾Ü¥L¹Bºâ
+			return 1;    //å…¶ä»–çš„spotå€¼æ¯”ç¾åœ¨çš„å°ï¼Œå…ˆé¸æ“‡ä»–é‹ç®—
 	}
 
 }

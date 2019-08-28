@@ -14,9 +14,9 @@ public class AstarPractice {
 		for(int row=0;row<mapH;row++) {
 			for(int col=0;col<mapW;col++) {
 				spotMap[row][col] = new Spot(row,col);
-				if(map[row][col] == -1)   //°_ÂI
+				if(map[row][col] == -1)   //èµ·é»ž
 					start = spotMap[row][col];
-				else if(map[row][col] == -2) //²×ÂI
+				else if(map[row][col] == -2) //çµ‚é»ž
 					goal = spotMap[row][col];
 			}
 		}
