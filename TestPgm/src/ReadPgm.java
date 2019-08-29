@@ -50,13 +50,13 @@ public class ReadPgm {
 		int rightEdge = -1;
 		int topEdge = -1;
 		int botEdge = -1;
-		int mapBGColor = 205; // ¦a¹Ïªº­I´º¦â
-		int[] humanPosition = {  picWidth / 2 , picHeight / 2 }; // ¤H©Ò¦bªº¦ì¸m
-		int[] start = new int[] { humanPosition[0], humanPosition[1] }; // °_ÂI
-//		´M§ä¦a¹Ïªº¤W¤U¥ª¥kÃä¬É
+		int mapBGColor = 205; // åœ°åœ–çš„èƒŒæ™¯è‰²
+		int[] humanPosition = {  picWidth / 2 , picHeight / 2 }; // äººæ‰€åœ¨çš„ä½ç½®
+		int[] start = new int[] { humanPosition[0], humanPosition[1] }; // èµ·é»
+//		å°‹æ‰¾åœ°åœ–çš„ä¸Šä¸‹å·¦å³é‚Šç•Œ
 		for (int row = 0; row < picHeight; row++) {
 			for (int col = 0; col < picWidth; col++) {
-//				Åª¨úpgmÀÉªº¤º®e
+//				è®€å–pgmæª”çš„å…§å®¹
 				data2D[row][col] = dis.readUnsignedByte();
 				if (data2D[row][col] != mapBGColor) {
 					if (leftEdge <= 0 || col < leftEdge)
@@ -78,7 +78,7 @@ public class ReadPgm {
 		BufferedImage image = new BufferedImage(picHeight, picWidth, BufferedImage.TYPE_INT_RGB);
 		for (int row = topEdge; row <= botEdge; row++) {
 			for (int col = leftEdge; col < rightEdge; col++) {
-//				±N¹Ï¤ùªº¨C¤@ÂIÂà¬°RGBÀx¦s¦bimage¸Ì
+//				å°‡åœ–ç‰‡çš„æ¯ä¸€é»è½‰ç‚ºRGBå„²å­˜åœ¨imageè£¡
 				int a = data2D[row][col];
 				Color newColor = new Color(a, a, a);
 				image.setRGB(col, row, newColor.getRGB());
@@ -87,10 +87,10 @@ public class ReadPgm {
 //		     System.out.println();
 		}
 
-//		¼Ğ°O¤H¦b­ş¥H¤Î¥X¤f¦ì¸m(±q­ìÂI¥Xµo¡Ax+ ¤è¦V©¹¥k¡Ay+ ¤è¦V©¹¤U)
-//		¤@¯ë¤Gºû¯x°}row¥Nªíy¶b¡Acol¥Nªíx¶b¡A©Ò¥H¦bsetRGB2ªº°Ñ¼Æ¤¤»İ´À´«¹L¨Ó(¦p84¦æ)
-		int startColor = new Color(255, 0, 0).getRGB();  //¬õ¦â
-		int endColor = new Color(0, 255, 0).getRGB();	 //ºñ¦â
+//		æ¨™è¨˜äººåœ¨å“ªä»¥åŠå‡ºå£ä½ç½®(å¾åŸé»å‡ºç™¼ï¼Œx+ æ–¹å‘å¾€å³ï¼Œy+ æ–¹å‘å¾€ä¸‹)
+//		ä¸€èˆ¬äºŒç¶­çŸ©é™£rowä»£è¡¨yè»¸ï¼Œcolä»£è¡¨xè»¸ï¼Œæ‰€ä»¥åœ¨setRGB2çš„åƒæ•¸ä¸­éœ€æ›¿æ›éä¾†(å¦‚84è¡Œ)
+		int startColor = new Color(255, 0, 0).getRGB();  //ç´…è‰²
+		int endColor = new Color(0, 255, 0).getRGB();	 //ç¶ è‰²
 		int[] door1 = new int[] { start[0] -  28, start[1] - 127 };
 		int[] door2 = new int[] { start[0] +  93, start[1] - 126 };
 		int[] door3 = new int[] { start[0] + 208, start[1] - 42 };
@@ -106,7 +106,7 @@ public class ReadPgm {
 			}
 		}
 
-//		¦b¦a¹Ï¤Wµe½u
+//		åœ¨åœ°åœ–ä¸Šç•«ç·š
 //		for (int i = 900; i <= 1000; i++) {
 //				int rgb = new Color(255, 0, 0).getRGB();
 //				image.setRGB(i,1000, rgb);
