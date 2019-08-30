@@ -192,7 +192,7 @@ public class Information {
 			for (int j = -pointSize; j <= pointSize; j++) {
 				if ((Math.pow(i, 2) + Math.pow(j, 2) <= Math.pow(pointSize, 2))) {
 					image.setRGB(start[1] + j, start[0] + i, startColor);
-					image.setRGB(door1[0] + j, door1[1] + i, endColor);
+					image.setRGB(door1[0] + j, door1[1] + i, new Color(0,0,255).getRGB());
 					image.setRGB(door2[0] + j, door2[1] + i, endColor);
 					image.setRGB(door3[0] + j, door3[1] + i, endColor);
 				}
