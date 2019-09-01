@@ -1,9 +1,12 @@
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -15,6 +18,8 @@ import javax.swing.JLabel;
 public class AstarPractice {
 
 	public static void main(String[] args) throws IOException {
+		
+		long startTime = System.currentTimeMillis() / 1000; //秒
 		// TODO Auto-generated method stub
 //		TestData1-----------------------------------
 
@@ -77,19 +82,38 @@ public class AstarPractice {
 //		一個終點
 		Information mapData = new Information();
 		int[][] map = mapData.createMap("fireHouse2.pgm");
+
+//		try {
+//			File filename = new File("new map.txt");
+//			filename.createNewFile();
+//			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+//		
+//			for(int i=0;i<map.length;i++) {
+//				for(int j=0;j<map[0].length;j++) {
+//					out.write(String.valueOf(map[i][j]));		
+//					out.write(" ");
+//				}
+//				out.write("\n");
+//			}
+//			out.flush();
+//			out.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
 		int mapH = map.length;
 		int mapW = map[0].length;
-		System.out.println(mapH +"   "+mapW);
-	
+		System.out.println(mapH + "   " + mapW);
+
 //		將int地圖轉換為spot地圖
 		Spot[][] spotMap = new Spot[mapH][mapW];
 		for (int row = 0; row < mapH; row++) {
 			for (int col = 0; col < mapW; col++) {
 				spotMap[row][col] = new Spot(row, col);
-//				if (map[row][col] < 10) {
-//					spotMap[row][col].setObstacle(true);
+				if (map[row][col] < 10) {
+					spotMap[row][col].setObstacle(true);
 //					System.out.println("row: " + row + "   col: " + col);
-//				}
+				}
 			}
 		}
 
@@ -99,18 +123,19 @@ public class AstarPractice {
 		LinkedList<Spot> path = new LinkedList<Spot>();
 		Astar a = new Astar(spotMap);
 		path = a.findPath(start, goal);
+		
+		long endTime = System.currentTimeMillis() / 1000;
 
-		int[][] pathMap = new int[path.size()][2];  //最短路徑傳給app端
-		System.out.println("TestData:");
-		for (int i = 0; i < path.size(); i++) {
-			System.out.println(path.get(i).getCoordinate(0) + "  " + path.get(i).getCoordinate(1));
-			if(path.get(i).isObstacle() == true) {
-				System.out.println("This is a obstacle: "+path.get(i).getCoordinate(0) + "  " + path.get(i).getCoordinate(1));
-			}
-			pathMap[i] = path.get(i).getCoordinate();
-		}
+//		int[][] pathMap = new int[path.size()][2]; // 最短路徑傳給app端
+////		System.out.println("TestData:");
+//		for (int i = 0; i < path.size(); i++) {
+////			System.out.println(path.get(i).getCoordinate(0) + "  " + path.get(i).getCoordinate(1));
+//			pathMap[i] = path.get(i).getCoordinate();
+//		}
 
 		mapData.drawMap(path, spotMap);
+		System.out.println("總共多少秒: " + (endTime - startTime));
+		
 	}
 
 }
