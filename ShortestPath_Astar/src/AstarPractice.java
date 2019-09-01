@@ -83,6 +83,7 @@ public class AstarPractice {
 		Information mapData = new Information();
 		int[][] map = mapData.createMap("fireHouse2.pgm");
 
+//		輸出地圖檔
 //		try {
 //			File filename = new File("new map.txt");
 //			filename.createNewFile();
@@ -126,13 +127,31 @@ public class AstarPractice {
 		
 		long endTime = System.currentTimeMillis() / 1000;
 
-//		int[][] pathMap = new int[path.size()][2]; // 最短路徑傳給app端
-////		System.out.println("TestData:");
-//		for (int i = 0; i < path.size(); i++) {
-////			System.out.println(path.get(i).getCoordinate(0) + "  " + path.get(i).getCoordinate(1));
-//			pathMap[i] = path.get(i).getCoordinate();
-//		}
+		int[][] pathMap = new int[path.size()][2]; // 最短路徑傳給app端
+//		System.out.println("TestData:");
+		for (int i = 0; i < path.size(); i++) {
+//			System.out.println(path.get(i).getCoordinate(0) + "  " + path.get(i).getCoordinate(1));
+			pathMap[i] = path.get(i).getCoordinate();
+		}
 
+		try {
+		File filename = new File("Door1 Path.txt");
+		filename.createNewFile();
+		BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+	
+		for(int i=0;i<pathMap.length;i++) {
+			for(int j=0;j<pathMap[0].length;j++) {
+				out.write(String.valueOf(pathMap[i][j]));		
+				out.write(" ");
+			}
+			out.write("\n");
+		}
+		out.flush();
+		out.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+		
 		mapData.drawMap(path, spotMap);
 		System.out.println("總共多少秒: " + (endTime - startTime));
 		
