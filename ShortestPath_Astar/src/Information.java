@@ -18,7 +18,6 @@ public class Information {
 	private static int topEdge = -1;
 	private static int botEdge = -1;
 	private static int[][] map = null;
-	private int[][] finalMap = null;
 	
 //	以下三個變數都是用x軸y軸的座標方式(矩陣第一個括號為y軸，第二個為x軸)  
 //	此項目未來須重構
@@ -108,11 +107,6 @@ public class Information {
 			}
 		}
 		//地圖旋轉+90度
-		
-		System.out.println("leftEdge: " + leftEdge);
-		System.out.println("rightEdge: " + rightEdge);
-		System.out.println("topEdge: " + topEdge);
-		System.out.println("botEdge: " + botEdge);
 		mapRotate90();
 
 		position[0] -= leftEdge;
@@ -131,12 +125,15 @@ public class Information {
 
 		int newWidth = rightEdge - leftEdge + 1;
 		int newHeight = botEdge - topEdge + 1;
-		finalMap = new int[newHeight][newWidth];
+		int[][] finalMap = new int[newHeight][newWidth];
 		for (int row = 0; row < newHeight; row++) {
 			for (int col = 0; col < newWidth; col++) {
 				finalMap[row][col] = map[topEdge + row][leftEdge + col];
 			}
 		}
+		map = finalMap;
+		picWidth = map[0].length;
+		picHeight = map.length;
 
 //		System.out.println("leftEdge: " + leftEdge);
 //		System.out.println("rightEdge: " + rightEdge);
@@ -194,20 +191,27 @@ public class Information {
 //		frame.setVisible(true);
 
 		dis.close();
-		return finalMap;
+		return map;
 	}
 
 	public void drawMap(LinkedList<Spot> path, Spot[][] spotMap) {
 //		繪圖-------------------------------------
-		BufferedImage image = new BufferedImage(picHeight, picWidth, BufferedImage.TYPE_INT_RGB);
-		for (int row = topEdge; row <= botEdge; row++) {
-			for (int col = leftEdge; col <= rightEdge; col++) {
+		BufferedImage image = new BufferedImage(picWidth, picHeight,BufferedImage.TYPE_INT_RGB);
+		
+		System.out.println("x :" + picWidth);
+		System.out.println("y :" + picHeight);
+		
+		for (int row = 0; row < picHeight; row++) {
+//			System.out.print("row: " + row);
+			
+			for (int col = 0; col < picWidth; col++) {
 //				將圖片的每一點轉為RGB儲存在image裡
+//				System.out.println("  col: " + col);
 				int a = map[row][col];
 				Color newColor = new Color(a, a, a);
 				image.setRGB(col, row, newColor.getRGB());
 //		         System.out.print(map[row][col] + " ");
-//				if (spotMap[row-leftEdge][col-topEdge].isObstacle() == true)
+//				if (spotMap[row][col].isObstacle() == true)
 //					image.setRGB(col, row, new Color(255, 255, 0).getRGB());
 			}
 //		     System.out.println();
@@ -217,14 +221,14 @@ public class Information {
 //		一般二維矩陣row代表y軸，col代表x軸，所以在setRGB2的參數中需替換過來(如84行)
 		int startColor = new Color(255, 0, 0).getRGB(); // 紅色
 		int endColor = new Color(0, 255, 0).getRGB(); // 綠色
-		int[] door1 = new int[] { origin[0] - 28, origin[1] - 127 };
-		int[] door2 = new int[] { origin[0] + 93, origin[1] - 126 };
-		int[] door3 = new int[] { origin[0] + 208, origin[1] - 42 };
+		int[] door1 = new int[] { origin[0] - 127, origin[1] + 28 };
+		int[] door2 = new int[] { origin[0] - 126, origin[1] - 93 };
+		int[] door3 = new int[] { origin[0] - 42 , origin[1] - 208};
 		int pointSize = 3;
 		for (int i = -pointSize; i <= pointSize; i++) {
 			for (int j = -pointSize; j <= pointSize; j++) {
 				if ((Math.pow(i, 2) + Math.pow(j, 2) <= Math.pow(pointSize, 2))) {
-					image.setRGB(start[1] + j, start[0] + i, startColor);
+					image.setRGB(start[0] + j, start[1] + i, startColor);
 					image.setRGB(door1[0] + j, door1[1] + i, new Color(0, 0, 255).getRGB());
 					image.setRGB(door2[0] + j, door2[1] + i, endColor);
 					image.setRGB(door3[0] + j, door3[1] + i, endColor);
@@ -236,8 +240,8 @@ public class Information {
 		int number = path.size();
 		for (int i = 0; i < number; i++) {
 			int rgb = new Color(255, 0, 0).getRGB();
-			int x = path.get(i).getCoordinate(0);
-			int y = path.get(i).getCoordinate(1);
+			int x = path.get(i).getCoordinate(1);
+			int y = path.get(i).getCoordinate(0);
 			image.setRGB(x, y, rgb);
 		}
 
@@ -247,16 +251,16 @@ public class Information {
 		int width = icon.getIconWidth();
 		JLabel label = new JLabel(icon);
 
-		label.setLocation(0, 0);
-		label.setSize(height, width);
-		frame.setSize(height, width);
+		label.setLocation(100, 100);
+		label.setSize(height+ 400, width+ 400);
+		frame.setSize(height+ 400, width+ 400);
 		frame.add(label);
 		frame.setVisible(true);
 
-		System.out.println("leftEdge: " + leftEdge);
-		System.out.println("rightEdge: " + rightEdge);
-		System.out.println("topEdge: " + topEdge);
-		System.out.println("botEdge: " + botEdge);
+//		System.out.println("leftEdge: " + leftEdge);
+//		System.out.println("rightEdge: " + rightEdge);
+//		System.out.println("topEdge: " + topEdge);
+//		System.out.println("botEdge: " + botEdge);
 	}
 
 	public static void mapRotate90() {
