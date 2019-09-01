@@ -26,15 +26,29 @@ public class SpotSort {
 
 	public void push(Spot spot) {
 		this.spotList.addFirst(spot);
+		System.out.print("Push: ");
 		spotListSort();
 	}
 
 	public void remove(Spot spot) {
 		this.spotList.remove(spot);
+		System.out.print("Remove: ");
 		spotListSort();
 	}
 
 	private void spotListSort() {
+		System.out.println(spotList.size());
+		
+//		for (int i = 0; i < spotList.size(); i++) {
+//			for (int j = 0; j < spotList.size() - 1 - i; j++) {
+//				if (spotList.get(j).g + spotList.get(j).h > spotList.get(j + 1).g + spotList.get(j + 1).h) {
+//					Spot temp = spotList.get(j + 1);
+//					spotList.remove(j + 1);
+//					spotList.add(j, temp);
+//				}
+//			}
+//		}
+
 		if (spotList.size() > 0) {
 			Spot min = spotList.get(0);
 			int pos = 0;
@@ -50,5 +64,4 @@ public class SpotSort {
 			}
 		}
 	}
-
 }
