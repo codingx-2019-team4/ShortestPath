@@ -15,7 +15,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class AstarPractice {
+public class FindShortestPath {
+	private static String mapFileName = "fireHouse2.pgm";
+	private static int[] startPoint;
+	private static int[] goalPoint;
+	
+	public FindShortestPath() {
+	}
+	public void setMapFileName(String fileName) {
+		mapFileName = fileName;
+	}
+	public void setStart(int[] start) {
+		startPoint = start;
+	}
+	public void setGoal(int[] goal) {
+		goalPoint = goal;
+	}
 
 	public static void main(String[] args) throws IOException {
 		
@@ -81,7 +96,7 @@ public class AstarPractice {
 //		MapData-----------------------------------
 //		一個終點
 		Information mapData = new Information();
-		int[][] map = mapData.createMap("fireHouse2.pgm");
+		int[][] map = mapData.createMap(mapFileName);
 
 //		輸出地圖檔
 //		try {
@@ -134,23 +149,23 @@ public class AstarPractice {
 			pathMap[i] = path.get(i).getCoordinate();
 		}
 
-		try {
-		File filename = new File("Door1 Path.txt");
-		filename.createNewFile();
-		BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-	
-		for(int i=0;i<pathMap.length;i++) {
-			for(int j=0;j<pathMap[0].length;j++) {
-				out.write(String.valueOf(pathMap[i][j]));		
-				out.write(" ");
-			}
-			out.write("\n");
-		}
-		out.flush();
-		out.close();
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+//		try {
+//		File filename = new File("Door1 Path.txt");
+//		filename.createNewFile();
+//		BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+//	
+//		for(int i=0;i<pathMap.length;i++) {
+//			for(int j=0;j<pathMap[0].length;j++) {
+//				out.write(String.valueOf(pathMap[i][j]));		
+//				out.write(" ");
+//			}
+//			out.write("\n");
+//		}
+//		out.flush();
+//		out.close();
+//	} catch (Exception e) {
+//		e.printStackTrace();
+//	}
 		
 		mapData.drawMap(path, spotMap);
 		System.out.println("總共多少秒: " + (endTime - startTime));
