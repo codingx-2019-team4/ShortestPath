@@ -1,16 +1,20 @@
 # ShortestPath
 
-Astar.java : the main class.
+FindShortestPath : the main class.
 
-Information.java : have two map data for test (7*7 matrix). One has obstacles, and the other doesn't have.
+Astar.java : A* algorithm
 
-Spot.java : definite the spots.
+Information.java : map data (include two test 7*7 maps and the fireHouse2 map) . Methods include create , draw and rotate map.
+
+Spot.java : define the spot (record coordinate, isObstacle and parent).
 
 SpotSort.java : adjust the matrix's content(ex. push,remove..).
 
 A* algorithm reference : https://tedsieblog.wordpress.com/2016/07/08/a-star-algorithm-introduction/
 
-地圖資訊 : 往右為x+ ,往下為y+，以圖片的中心為原點(0,0)去計算出口位置
+----------------------------------------------------------------------------------------------------------
+
+Map information : The x-coordinate from left to right side is positive (x-axis) , and the y-coordinate from top to bottom is positive.
 
 ----------------------------------------------------------------------------------------------------------
 Test map data:
