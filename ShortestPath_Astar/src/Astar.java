@@ -107,8 +107,8 @@ public class Astar {
 		LinkedList<Spot> neightbours = new LinkedList<Spot>();
 		int posRow = spot.getCoordinate(0);
 		int posCol = spot.getCoordinate(1);
-		System.out.println(posRow + " " + posCol);
-		System.out.println("--------------------");
+//		System.out.println(posRow + " " + posCol);
+//		System.out.println("--------------------");
 //		逆時針加入鄰居
 //		上鄰居
 		if ((posRow > 0) && (map[posRow - 1][posCol].isObstacle() == false))
