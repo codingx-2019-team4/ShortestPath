@@ -74,7 +74,7 @@ public class ReadPgm {
 		System.out.println("rightEdge: " + rightEdge);
 		System.out.println("topEdge: " + topEdge);
 		System.out.println("botEdge: " + botEdge);
-
+		
 		BufferedImage image = new BufferedImage(picHeight, picWidth, BufferedImage.TYPE_INT_RGB);
 		for (int row = topEdge; row <= botEdge; row++) {
 			for (int col = leftEdge; col < rightEdge; col++) {

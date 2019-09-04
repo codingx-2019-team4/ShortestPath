@@ -36,6 +36,10 @@ public class Spot {
 	public int getCoordinate(int index) {
 		return coordinate[index];
 	}
+	public void setCoordinate(int x, int y) {
+		coordinate[0] = x;
+		coordinate[1] = y;
+	}
 	
 	public void setObstacle(boolean b) {
 		this.obstacle = b;
