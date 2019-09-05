@@ -110,30 +110,31 @@ public class Astar {
 //		System.out.println(posRow + " " + posCol);
 //		System.out.println("--------------------");
 //		逆時針加入鄰居
+		
 //		上鄰居
 		if ((posRow > 0) && (map[posRow - 1][posCol].isObstacle() == false))
 			neightbours.add(map[posRow - 1][posCol]);
 //		左上鄰居
-		if ((posRow > 0) && (posCol > 0) && (map[posRow - 1][posCol - 1].isObstacle() == false))
-			neightbours.add(map[posRow - 1][posCol - 1]);
+//		if ((posRow > 0) && (posCol > 0) && (map[posRow - 1][posCol - 1].isObstacle() == false))
+//			neightbours.add(map[posRow - 1][posCol - 1]);
 //		 左鄰居
 		if ((posCol > 0) && (map[posRow][posCol - 1].isObstacle() == false))
 			neightbours.add(map[posRow][posCol - 1]);
 //		左下鄰居
-		if ((posRow < map.length - 1) && (posCol > 0) && (map[posRow + 1][posCol - 1].isObstacle() == false) )
-			neightbours.add(map[posRow + 1][posCol - 1]);
+//		if ((posRow < map.length - 1) && (posCol > 0) && (map[posRow + 1][posCol - 1].isObstacle() == false) )
+//			neightbours.add(map[posRow + 1][posCol - 1]);
 //		下鄰居
 		if ((posRow < map.length - 1) && (map[posRow + 1][posCol].isObstacle() == false))
 			neightbours.add(map[posRow + 1][posCol]);
 //		右下鄰居
-		if ((posRow < map.length - 1) && (posCol < map[0].length - 1) && (map[posRow + 1][posCol + 1].isObstacle() == false))
-			neightbours.add(map[posRow + 1][posCol + 1]);
+//		if ((posRow < map.length - 1) && (posCol < map[0].length - 1) && (map[posRow + 1][posCol + 1].isObstacle() == false))
+//			neightbours.add(map[posRow + 1][posCol + 1]);
 //		右鄰居
 		if ((posCol < map[0].length - 1) && (map[posRow][posCol + 1].isObstacle() == false))
 			neightbours.add(map[posRow][posCol + 1]);
 //		右上鄰居
-		if ((posCol < map[0].length - 1) && (map[posRow - 1][posCol + 1].isObstacle() == false) && (posRow > 0))
-			neightbours.add(map[posRow - 1][posCol + 1]);
+//		if ((posCol < map[0].length - 1) && (map[posRow - 1][posCol + 1].isObstacle() == false) && (posRow > 0))
+//			neightbours.add(map[posRow - 1][posCol + 1]);
 
 		return neightbours;
 	}

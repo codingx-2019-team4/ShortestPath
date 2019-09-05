@@ -25,18 +25,18 @@ public class FireHousePicture {
 		}
 		int h = img.getHeight();
 		int w = img.getWidth();
-//		int[][] map = new int[h][w];
-//		BufferedImage img2 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		int[][] map = new int[h][w];
+		BufferedImage img2 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
-		int stepLength = 5;
+		int stepLength = 8;
 		for (int i = 0; i < h; i++) {
 			for (int j = 0; j < w; j++) {
-//				map[i][j] = img.getRGB(j, i);
-//				int a = map[i][j];
-//				img2.setRGB(j, i,a);
-				if(i%stepLength == 0 || j%stepLength ==0) {
-					img.setRGB(j,i, new Color(255,0,0).getRGB());
-				}
+				map[i][j] = img.getRGB(j, i);
+				int a = map[i][j];
+				img2.setRGB(j, i,a);
+//				if(i%stepLength == 0 || j%stepLength ==0) {
+//					img.setRGB(j,i, new Color(255,0,0).getRGB());
+//				}
 			}
 		}
 //		int position[][] = { { 10, 10 }, { 50, 10 }, { 90, 10 }, { 130, 10 }, { 170, 10 }, { 210, 10 }, { 250, 10 },
@@ -58,7 +58,7 @@ public class FireHousePicture {
 //		}
 
 		JFrame frame = new JFrame();
-		ImageIcon icon = new ImageIcon(img);
+		ImageIcon icon = new ImageIcon(img2);
 		int height = icon.getIconHeight();
 		int width = icon.getIconWidth();
 		JLabel label = new JLabel(icon);
