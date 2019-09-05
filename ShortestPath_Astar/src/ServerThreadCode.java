@@ -28,7 +28,7 @@ public class ServerThreadCode extends Thread {
 
 			writer = new PrintStream(m_socket.getOutputStream());// 由於是將資料編寫並送出，所以是Output
 
-			int[][] mStringArray = { { 10, 20 }, { 30, 40 } };
+//			int[][] mStringArray = { { 10, 20 }, { 30, 40 } };
 			while (true) {
 //				JSONArray mJSONArray = new JSONArray(Arrays.asList(mStringArray));
 				JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
@@ -38,6 +38,12 @@ public class ServerThreadCode extends Thread {
 
 				writer.println(mJSONArray.toString());// 將資料編寫進串流內
 				writer.flush();// 清空緩衝區並送出資料
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 //			m_socket.close();// 關閉連線
 		} catch (IOException e) {
