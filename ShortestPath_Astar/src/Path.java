@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -120,8 +121,8 @@ public class Path {
 		int mapW = map[0].length;
 
 //		為了加快計算最短路徑的速度，將原地圖劃分為更小的地圖
-		int stepLength = 9; // 原地圖 : 切割後地圖 = stepLength : 1
-		int[][] dividedMap = new int[((mapH-1) / stepLength) + 1][((mapW-1) / stepLength) + 1];
+		int stepLength = 5; // 原地圖 : 切割後地圖 = stepLength : 1
+		int[][] dividedMap = new int[((mapH - 1) / stepLength) + 1][((mapW - 1) / stepLength) + 1];
 
 		System.out.println(mapH + "   " + mapW);
 
@@ -130,37 +131,72 @@ public class Path {
 		Spot[][] dividedSpotMap = new Spot[dividedMap.length][dividedMap[0].length];
 
 		System.out.println("dividedMap:" + dividedMap.length + "   " + dividedMap[0].length);
-
+		
 		boolean obstacle = false;
 		for (int row = 0; row < mapH; row++) {
 			for (int col = 0; col < mapW; col++) {
 				spotMap[row][col] = new Spot(row, col);
-				if (map[row][col] < 10) { // 小於10的值設為障礙物
+				if (map[row][col] < 10 || map[row][col] == 205) { // 小於10的值設為障礙物
 					spotMap[row][col].setObstacle(true);
 					obstacle = true;
 				}
 				if (row % stepLength == 0 || col % stepLength == 0) {
 					dividedSpotMap[row / stepLength][col / stepLength] = new Spot(row / stepLength, col / stepLength);
-					if (obstacle == true) {
+					if ((obstacle == true) || (spotMap[row][col].isObstacle() == true)) {
 						dividedSpotMap[row / stepLength][col / stepLength].setObstacle(true);
 						obstacle = false;
 					}
 				}
 			}
 		}
+		
+		int dangerZoneSize = 35;
+		ArrayList<int[]> dangerPointList = mapData.getDangerZone();
+		if (dangerPointList != null) {
+			for (int number = 0; number < dangerPointList.size(); number++) {
+				for (int i = -dangerZoneSize; i <= dangerZoneSize; i++) {
+					for (int j = -dangerZoneSize; j <= dangerZoneSize; j++) {
+						int x = dangerPointList.get(number)[0] + j;
+						int y = dangerPointList.get(number)[1] + i;
+						if ((x >= 0) && (x <= mapW) && (y >= 0) && (y <= mapH)) {
+							spotMap[y][x].setObstacle(true);
+						}
+						if(x % stepLength == 0 || y % stepLength == 0)
+							dividedSpotMap[y / stepLength][x / stepLength].setObstacle(true);
+					}
+				}
+			}
+		}
+		
 		LinkedList<Spot> path = new LinkedList<Spot>();
-
+		LinkedList<LinkedList<Spot>> pathList = new LinkedList<LinkedList<Spot>>();
 		Spot start = dividedSpotMap[mapData.start[1] / stepLength][mapData.start[0] / stepLength];
-		Spot goal = dividedSpotMap[mapData.goal.get(0)[1] / stepLength][mapData.goal.get(0)[0] / stepLength];
 
-		System.out.println("start:" + start.getCoordinate(0) + "," + start.getCoordinate(1) + "   goal:"
-				+ goal.getCoordinate(0) + "," + goal.getCoordinate(1));
-
-		Astar b = new Astar(dividedSpotMap);
-		path = b.findPath(start, goal);
+		int minFValue =(int) 1e10;
+		int index = 0;
+		for (int i = 0; i < mapData.goal.size(); i++) {
+			int nowFValue = 0;
+			Spot goal = dividedSpotMap[mapData.goal.get(i)[1] / stepLength][mapData.goal.get(i)[0] / stepLength];
+			System.out.println("start:" + start.getCoordinate(0) + "," + start.getCoordinate(1) + "   goal:"
+					+ goal.getCoordinate(0) + "," + goal.getCoordinate(1));
+			Astar star = new Astar(dividedSpotMap);
+			path = star.findPath(start, goal);
+			pathList.add(i,path);
+			
+			nowFValue = goal.g + goal.h;
+			System.out.println("F:" + nowFValue);
+			if(path == null)
+				continue;
+			if(minFValue > nowFValue) {
+				index = i;
+				minFValue = nowFValue;
+			}
+		}
+		
+		LinkedList<Spot> shortestPath = pathList.get(index);
 
 		long endTime = System.currentTimeMillis() / 1000;
-		int[][] pathMap = new int[path.size()][2]; // 最短路徑傳給app端
+		int[][] pathMap = new int[shortestPath.size()][2]; // 最短路徑傳給app端
 
 //		將切割後地圖的最短路徑還原為原地圖的解析度
 		for (int i = 0; i < pathMap.length; i++) {
@@ -169,13 +205,13 @@ public class Path {
 			}
 		}
 
-		for (int i = 0; i < path.size(); i++) {
-			pathMap[i][0] = path.get(i).getCoordinate(1) * stepLength;
-			pathMap[i][1] = path.get(i).getCoordinate(0) * stepLength;
-			System.out.println(path.get(i).getCoordinate(1) + "  " + path.get(i).getCoordinate(0));
+		for (int i = 0; i < shortestPath.size(); i++) {
+			pathMap[i][0] = shortestPath.get(i).getCoordinate(1) * stepLength;
+			pathMap[i][1] = shortestPath.get(i).getCoordinate(0) * stepLength;
+			System.out.println(shortestPath.get(i).getCoordinate(1) + "  " + shortestPath.get(i).getCoordinate(0));
 		}
 
-		mapData.drawMap(path, stepLength);
+		mapData.drawMap(shortestPath, stepLength);
 		System.out.println("總共多少秒: " + (endTime - startTime));
 
 		return pathMap;
