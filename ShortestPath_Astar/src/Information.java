@@ -1,11 +1,14 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,12 +21,14 @@ public class Information {
 	private static int topEdge = -1;
 	private static int botEdge = -1;
 	private static int[][] map = null;
-	
-//	以下三個變數都是用x軸y軸的座標方式(矩陣第一個括號為y軸，第二個為x軸)  
+	private static int mapBGColor = 205; // 地圖的背景色
+
+//	以下三個變數都是用x軸y軸的座標方式(其他矩陣如地圖第一個括號為y軸，第二個為x軸)  
 //	此項目未來須重構
-	private int[] origin;
-	public int[] start;
-	public int[] goal;
+	private int[] origin; // 原點
+	public int[] start; // 人的位置
+	public ArrayList<int[]> goal = new ArrayList<int[]>(); // 安全位置
+	private ArrayList<int[]> dangerPoint = null; // sensor感測器位置，當有危險時標記
 
 	public int[][] testData1() {
 		int[][] map = new int[7][7];
@@ -35,6 +40,7 @@ public class Information {
 	}
 
 	public int[][] testData2() {
+
 		int[][] map = new int[7][7];
 		int start = -1;
 		int end = -2;
@@ -47,8 +53,25 @@ public class Information {
 		return map;
 	}
 
-	public int[][] createMap(String filename) throws IOException {
-		String filePath = filename;
+	public void setStart(int[] start) {
+		if (map[start[1]][start[0]] > 10)
+			this.start = start;
+	}
+
+	public void setDangerZone(int[] dangerPoint) {
+		if (this.dangerPoint == null)
+			this.dangerPoint = new ArrayList<int[]>();
+		this.dangerPoint.add(dangerPoint);
+	}
+	public int getMapHeight() {
+		return map.length;
+	}
+	public int getMapWidth() {
+		return map[0].length;
+	}
+
+	public int[][] createPGMMap(String fileName) throws IOException {
+		String filePath = fileName;
 		FileInputStream fileInputStream = new FileInputStream(filePath);
 		Scanner scan = new Scanner(fileInputStream);
 		// Discard the magic number
@@ -58,7 +81,6 @@ public class Information {
 		// Read pic width, height and max value
 		this.picWidth = scan.nextInt();
 		this.picHeight = scan.nextInt();
-//		int maxvalue = scan.nextInt();
 
 		fileInputStream.close();
 
@@ -80,14 +102,7 @@ public class Information {
 		// read the image data and find the exactly map
 		map = new int[picHeight][picWidth];
 
-		int mapBGColor = 205; // 地圖的背景色
 		int[] position = { picWidth / 2, picHeight / 2 };
-//		int[] goalPosition = { (position[0] - 28), (position[1] - 127) };
-//		this.origin = position; // 原點
-//
-////		設置起點、終點		
-//		this.start = origin; // 人所在的位置(起點)
-//		this.goal = goalPosition;// 終點
 
 //		尋找地圖的上下左右邊界
 		for (int row = 0; row < picHeight; row++) {
@@ -106,22 +121,30 @@ public class Information {
 				}
 			}
 		}
-		//地圖旋轉+90度
+		// 地圖旋轉+90度
 		mapRotate90();
 
 		position[0] -= leftEdge;
 		position[1] -= topEdge;
-		int[] goalPosition = { (position[0] - 127), (position[1] + 28) };
+		int[] goalPosition1 = { (position[0] - 127), (position[1] + 28) };
+		int[] goalPosition2 = { (position[0] - 126), (position[1] - 93) };
+		int[] goalPosition3 = { (position[0] - 42), (position[1] - 208) };
+
+		System.out.println("position: " + position[1] + "  " + position[0]);
+		goal.add(goalPosition1);
+		goal.add(goalPosition2);
+		goal.add(goalPosition3);
+
 		this.origin = position; // 原點
 
 		System.out.println("leftEdge: " + leftEdge);
 		System.out.println("rightEdge: " + rightEdge);
 		System.out.println("topEdge: " + topEdge);
 		System.out.println("botEdge: " + botEdge);
-		
+
 //		設置起點、終點		
-		this.start = origin; // 人所在的位置(起點)
-		this.goal = goalPosition;// 終點
+		this.start = origin; // 人所在的位置(起點) (預設)
+//		this.goal = goalPosition;// 終點
 
 		int newWidth = rightEdge - leftEdge + 1;
 		int newHeight = botEdge - topEdge + 1;
@@ -136,37 +159,76 @@ public class Information {
 		picHeight = map.length;
 
 		dis.close();
+		scan.close();
 		return map;
 	}
 
-	public void drawMap(LinkedList<Spot> path, Spot[][] spotMap) {
-//		繪圖-------------------------------------
-		BufferedImage image = new BufferedImage(picWidth, picHeight,BufferedImage.TYPE_INT_RGB);
+	public int[][] createJPGMap(String fileName){
+//		FileInputStream fileInputStream = new FileInputStream(filePath);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(fileName));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		picHeight = img.getHeight();
+		picWidth = img.getWidth();
 		
+		
+		map = new int[picHeight][picWidth];
+		for(int i =0;i<picHeight;i++) {
+			for(int j=0;j<picWidth;j++) {
+				Color color = new Color(img.getRGB(j, i));
+				map[i][j] = (int)((color.getRed() + color.getGreen() + color.getBlue() ) / 3);
+			}
+		}
+		
+//		原點
+		int[] position = new int[2];
+		position[0] = 179;
+		position[1] = 314;
+		int[] goalPosition1 = { (position[0] - 127), (position[1] + 28) };
+		int[] goalPosition2 = { (position[0] - 126), (position[1] - 93) };
+		int[] goalPosition3 = { (position[0] - 42), (position[1] - 208) };
+
+		
+		System.out.println("position: " + position[1] + "  " + position[0]);
+		this.goal.add(goalPosition1);
+		this.goal.add(goalPosition2);
+		this.goal.add(goalPosition3);
+
+		this.origin = position; // 原點
+		this.start = origin;
+		
+		return map;
+	}
+	
+	public void drawMap(LinkedList<Spot> path, int stepLength) {
+//		繪圖-------------------------------------
+		BufferedImage image = new BufferedImage(picWidth, picHeight, BufferedImage.TYPE_INT_RGB);
+
 		System.out.println("x :" + picWidth);
 		System.out.println("y :" + picHeight);
-		
+
 		for (int row = 0; row < picHeight; row++) {
-//			System.out.print("row: " + row);
-			
 			for (int col = 0; col < picWidth; col++) {
 //				將圖片的每一點轉為RGB儲存在image裡
 //				System.out.println("  col: " + col);
 				int a = map[row][col];
 				Color newColor = new Color(a, a, a);
 				image.setRGB(col, row, newColor.getRGB());
-//		         System.out.print(map[row][col] + " ");
 			}
-//		     System.out.println();
 		}
 
 //		標記人在哪以及出口位置(從原點出發，x+ 方向往右，y+ 方向往下)
 //		一般二維矩陣row代表y軸，col代表x軸，所以在setRGB2的參數中需替換過來(如84行)
-		int startColor = new Color(255, 0, 0).getRGB(); // 紅色
+		int startColor = new Color(255, 0, 255).getRGB(); // 紅色
 		int endColor = new Color(0, 255, 0).getRGB(); // 綠色
 		int[] door1 = new int[] { origin[0] - 127, origin[1] + 28 };
 		int[] door2 = new int[] { origin[0] - 126, origin[1] - 93 };
-		int[] door3 = new int[] { origin[0] - 42 , origin[1] - 208};
+		int[] door3 = new int[] { origin[0] - 42, origin[1] - 208 };
+		
 		int pointSize = 3;
 		for (int i = -pointSize; i <= pointSize; i++) {
 			for (int j = -pointSize; j <= pointSize; j++) {
@@ -179,14 +241,28 @@ public class Information {
 			}
 		}
 
-//		在地圖上畫線
 		int number = path.size();
 		for (int i = 0; i < number; i++) {
 			int rgb = new Color(255, 0, 0).getRGB();
-			int x = path.get(i).getCoordinate(1);
-			int y = path.get(i).getCoordinate(0);
-			image.setRGB(x, y, rgb);
+			int x = path.get(i).getCoordinate(1) * stepLength;
+			int y = path.get(i).getCoordinate(0) * stepLength;
+			for (int j = -pointSize; j <= pointSize; j++) {
+				for (int k = -pointSize; k <= pointSize; k++) {
+					if ((Math.pow(j, 2) + Math.pow(k, 2) <= Math.pow(pointSize, 2))) {
+						image.setRGB(x + k, y + j, rgb);
+					}
+				}
+			}
 		}
+
+//		儲存圖片
+//		File outputFile = new File("fireHouseResult.jpg");
+//		try {
+//			ImageIO.write(image, "jpg", outputFile);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		JFrame frame = new JFrame();
 		ImageIcon icon = new ImageIcon(image);
@@ -195,8 +271,8 @@ public class Information {
 		JLabel label = new JLabel(icon);
 
 		label.setLocation(100, 100);
-		label.setSize(height+ 400, width+ 400);
-		frame.setSize(height+ 400, width+ 400);
+		label.setSize(height + 400, width + 400);
+		frame.setSize(height + 400, width + 400);
 		frame.add(label);
 		frame.setVisible(true);
 
@@ -222,7 +298,26 @@ public class Information {
 		rightEdge = botEdge;
 		topEdge = originWidth - tempRight;
 		botEdge = originWidth - tempLeft;
-		
+
 	}
+
+//	public static void dilation(int[][] map) {
+//		int[][] newMap = new int[map.length + 2][map[0].length + 2];
+//		for(int i=0;i<map.length;i++) {
+//			for(int j=0;j<map[0].length;j++) {
+//				newMap[i+1][j+1] = map[i][j];
+//			}
+//		}
+//		for (int i = 0; i < newMap.length; i++) {
+//			for (int j = 0; j < newMap[0].length; j++) {
+//				if (newMap[i][j] == mapBGColor && 
+//					(  newMap[i - 1][j]     == 255 || newMap[i - 1][j - 1] == 255 || newMap[i][j - 1]     == 255
+//					|| newMap[i + 1][j - 1] == 255 || newMap[i + 1][j]     == 255 || newMap[i + 1][j + 1] == 255
+//					|| newMap[i][j + 1]     == 255 || newMap[i - 1][j + 1] == 255)) {
+//					map[i- 1][j- 1] = 255;
+//				}
+//			}
+//		}
+//	}
 
 }
