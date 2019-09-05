@@ -14,8 +14,10 @@ public class Main {
 		path.setMapFileName("fireHouse2_cut.jpg");
 		System.out.println("after goal:" + mapData.goal.size());
 		System.out.println(mapData.getMapHeight() + " " + mapData.getMapWidth());
-		int[] a = {290,430};
-		mapData.setStart(a);
+//		int[] a = {290,430};
+//		mapData.setStart(a);
+//		int[] dangerPoint = {85,330};
+//		mapData.setDangerZone(dangerPoint);
 		int[][] pathMap = path.findShortestPath();
 		connectAPP(pathMap);
 	}

@@ -28,7 +28,7 @@ public class Information {
 	private int[] origin; // 原點
 	public int[] start; // 人的位置
 	public ArrayList<int[]> goal = new ArrayList<int[]>(); // 安全位置
-	private ArrayList<int[]> dangerPoint = null; // sensor感測器位置，當有危險時標記
+	private ArrayList<int[]> dangerPointList = null; // sensor感測器位置，當有危險時標記
 
 	public int[][] testData1() {
 		int[][] map = new int[7][7];
@@ -54,18 +54,28 @@ public class Information {
 	}
 
 	public void setStart(int[] start) {
-		if (map[start[1]][start[0]] > 10)
+		System.out.println(( origin[0] + start[0]) + "  " + ( origin[1] + start[1]));
+		if (map[origin[1] +start[1]][origin[0] +start[0]] > 10) {
 			this.start = start;
+			this.start[0] = origin[0] + start[0];
+			this.start[1] = origin[1] + start[1];
+		}
 	}
 
 	public void setDangerZone(int[] dangerPoint) {
-		if (this.dangerPoint == null)
-			this.dangerPoint = new ArrayList<int[]>();
-		this.dangerPoint.add(dangerPoint);
+		if (this.dangerPointList == null)
+			this.dangerPointList = new ArrayList<int[]>();
+		this.dangerPointList.add(dangerPoint);
 	}
+
+	public ArrayList<int[]> getDangerZone() {
+		return dangerPointList;
+	}
+	
 	public int getMapHeight() {
 		return map.length;
 	}
+
 	public int getMapWidth() {
 		return map[0].length;
 	}
@@ -163,7 +173,7 @@ public class Information {
 		return map;
 	}
 
-	public int[][] createJPGMap(String fileName){
+	public int[][] createJPGMap(String fileName) {
 //		FileInputStream fileInputStream = new FileInputStream(filePath);
 		BufferedImage img = null;
 		try {
@@ -174,16 +184,15 @@ public class Information {
 		}
 		picHeight = img.getHeight();
 		picWidth = img.getWidth();
-		
-		
+
 		map = new int[picHeight][picWidth];
-		for(int i =0;i<picHeight;i++) {
-			for(int j=0;j<picWidth;j++) {
+		for (int i = 0; i < picHeight; i++) {
+			for (int j = 0; j < picWidth; j++) {
 				Color color = new Color(img.getRGB(j, i));
-				map[i][j] = (int)((color.getRed() + color.getGreen() + color.getBlue() ) / 3);
+				map[i][j] = (int) ((color.getRed() + color.getGreen() + color.getBlue()) / 3);
 			}
 		}
-		
+
 //		原點
 		int[] position = new int[2];
 		position[0] = 179;
@@ -192,7 +201,6 @@ public class Information {
 		int[] goalPosition2 = { (position[0] - 126), (position[1] - 93) };
 		int[] goalPosition3 = { (position[0] - 42), (position[1] - 208) };
 
-		
 		System.out.println("position: " + position[1] + "  " + position[0]);
 		this.goal.add(goalPosition1);
 		this.goal.add(goalPosition2);
@@ -200,10 +208,10 @@ public class Information {
 
 		this.origin = position; // 原點
 		this.start = origin;
-		
+
 		return map;
 	}
-	
+
 	public void drawMap(LinkedList<Spot> path, int stepLength) {
 //		繪圖-------------------------------------
 		BufferedImage image = new BufferedImage(picWidth, picHeight, BufferedImage.TYPE_INT_RGB);
@@ -214,7 +222,6 @@ public class Information {
 		for (int row = 0; row < picHeight; row++) {
 			for (int col = 0; col < picWidth; col++) {
 //				將圖片的每一點轉為RGB儲存在image裡
-//				System.out.println("  col: " + col);
 				int a = map[row][col];
 				Color newColor = new Color(a, a, a);
 				image.setRGB(col, row, newColor.getRGB());
@@ -228,7 +235,7 @@ public class Information {
 		int[] door1 = new int[] { origin[0] - 127, origin[1] + 28 };
 		int[] door2 = new int[] { origin[0] - 126, origin[1] - 93 };
 		int[] door3 = new int[] { origin[0] - 42, origin[1] - 208 };
-		
+
 		int pointSize = 3;
 		for (int i = -pointSize; i <= pointSize; i++) {
 			for (int j = -pointSize; j <= pointSize; j++) {
@@ -237,6 +244,20 @@ public class Information {
 					image.setRGB(door1[0] + j, door1[1] + i, new Color(0, 0, 255).getRGB());
 					image.setRGB(door2[0] + j, door2[1] + i, endColor);
 					image.setRGB(door3[0] + j, door3[1] + i, endColor);
+				}
+			}
+		}
+
+		int dangerZoneSize = 35;
+		if (dangerPointList != null) {
+			for (int number = 0; number < dangerPointList.size(); number++) {
+				for (int i = -dangerZoneSize; i <= dangerZoneSize; i++) {
+					for (int j = -dangerZoneSize; j <= dangerZoneSize; j++) {
+						int x = dangerPointList.get(number)[0] + j;
+						int y = dangerPointList.get(number)[1] + i;
+						if ((x >= 0) && (x <= picWidth) && (y >= 0) && (y <= picHeight))
+							image.setRGB(x, y, new Color(0, 155, 155).getRGB());
+					}
 				}
 			}
 		}
