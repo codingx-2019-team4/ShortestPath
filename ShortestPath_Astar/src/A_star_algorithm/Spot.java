@@ -1,3 +1,4 @@
+package A_star_algorithm;
 
 public class Spot {
 	public int g; // 起點隨著路徑走到此點的距離

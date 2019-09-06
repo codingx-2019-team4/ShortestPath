@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 import org.json.JSONArray;
 
-public class ServerLim {
+public class ServerLin {
 	public static void main(String[] args) throws Exception {
 		new Thread(new ServerMainThread()).start();
 	}

@@ -1,3 +1,4 @@
+package A_star_algorithm;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,7 +25,7 @@ public class Main {
 
 	public static void connectAPP(int[][] pathMap) {
 		try {
-			m_serverSocket = new ServerSocket(8088);// 建立伺服器端的Socket，並且設定Port
+			m_serverSocket = new ServerSocket(8081);// 建立伺服器端的Socket，並且設定Port
 			System.out.println("等待連線......");
 			while (true) {
 				m_socket = m_serverSocket.accept();// 等待伺服器端的連線，若未連線則程式一直停在這裡

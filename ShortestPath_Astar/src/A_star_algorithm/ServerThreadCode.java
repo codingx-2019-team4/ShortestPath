@@ -1,3 +1,4 @@
+package A_star_algorithm;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
@@ -19,6 +20,12 @@ public class ServerThreadCode extends Thread {
 	public void run()// 覆寫Thread內的run()方法
 	{
 		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
 			// 送出端的編寫必須和接收端的接收Class相同
 			// 使用Socket的getInputStream()和getOutputStream()進行接收和發送資料
 			// 想要寫入字串可以用 PrintStream；想要把各種基本資料型態，如 int, double...等的 "值" 輸出，可以用
@@ -28,7 +35,7 @@ public class ServerThreadCode extends Thread {
 			writer = new PrintStream(m_socket.getOutputStream());// 由於是將資料編寫並送出，所以是Output
 
 //			int[][] mStringArray = { { 10, 20 }, { 30, 40 } };
-			while (true) {
+//			while (true) {
 //				JSONArray mJSONArray = new JSONArray(Arrays.asList(mStringArray));
 				JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
 
@@ -43,7 +50,7 @@ public class ServerThreadCode extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+//			}
 //			m_socket.close();// 關閉連線
 		} catch (IOException e) {
 			System.out.println(e.getMessage());// 出現例外時，捕捉並顯示例外訊息(連線成功不會出現例外)

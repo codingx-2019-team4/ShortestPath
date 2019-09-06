@@ -23,7 +23,7 @@ class ClientMainThread2 extends Thread {
 	public void run()// 覆寫Thread內的run()方法
 	{
 		Socket client2 = new Socket();
-		InetSocketAddress isa2 = new InetSocketAddress("172.20.10.3", 8081);
+		InetSocketAddress isa2 = new InetSocketAddress("192.168.208.200", 8081);
 		try {
 			client2.connect(isa2, 10000);
 			while(true) {

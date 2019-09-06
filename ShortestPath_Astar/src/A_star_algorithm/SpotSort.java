@@ -1,3 +1,4 @@
+package A_star_algorithm;
 
 import java.util.LinkedList;
 

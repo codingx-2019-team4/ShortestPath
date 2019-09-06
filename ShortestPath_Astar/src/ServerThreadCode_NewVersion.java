@@ -1,5 +1,4 @@
 
-
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,13 +17,16 @@ import javax.imageio.ImageIO;
 
 import org.json.JSONArray;
 
+import A_star_algorithm.Information;
+import A_star_algorithm.Path;
+
 public class ServerThreadCode_NewVersion extends Thread {
 	private Socket m_socket;// Server和Client之間的連線通道
 	public int[][] pathMap = null;
 
 	public ServerThreadCode_NewVersion(Socket m_socket) {
 //		this.pathMap = pathMap;
-//		this.m_socket = m_socket;
+		this.m_socket = m_socket;
 	}
 
 	@Override
@@ -33,7 +35,7 @@ public class ServerThreadCode_NewVersion extends Thread {
 		System.out.println("ininin");
 		Socket client2 = new Socket();
 
-		InetSocketAddress isa2 = new InetSocketAddress("172.20.10.7", 8025);
+		InetSocketAddress isa2 = new InetSocketAddress("192.168.208.150", 8035);
 		try {
 			client2.connect(isa2, 10000);
 			System.out.println("conect?");
@@ -47,10 +49,9 @@ public class ServerThreadCode_NewVersion extends Thread {
 				System.out.print(receive);
 //				receive.split(" ");
 //				位置為公分
-				int originX =(int) (Integer.parseInt(receive.split(" ")[0]) / 5);
-				int originY =(int) (Integer.parseInt(receive.split(" ")[1]) / 5);
-				
-				
+				int originX = (int) (Integer.parseInt(receive.split(" ")[0]) / 5);
+				int originY = (int) (Integer.parseInt(receive.split(" ")[1]) / 5);
+
 //				算路徑
 				Path path = new Path();
 				Information mapData = path.getInformation();
@@ -58,41 +59,40 @@ public class ServerThreadCode_NewVersion extends Thread {
 				path.setMapFileName("fireHouse2_cut.jpg");
 				System.out.println("after goal:" + mapData.goal.size());
 				System.out.println(mapData.getMapHeight() + " " + mapData.getMapWidth());
-				int[] start = {-originY,-originX};
+				int[] start = { -originY, -originX };
 				mapData.setStart(start);
-				int[][] pathMap = path.findShortestPath();		
+				int[][] pathMap = path.findShortestPath();
 //				
-////				傳給Bob
-//				try {
-//					// 送出端的編寫必須和接收端的接收Class相同
-//					// 使用Socket的getInputStream()和getOutputStream()進行接收和發送資料
-//					// 想要寫入字串可以用 PrintStream；想要把各種基本資料型態，如 int, double...等的 "值" 輸出，可以用
-//					// DataOutputStream；想要把整個物件 Serialize，則可以用 ObjectOutputStream。
-//					PrintStream writer;// 在此我使用PrintStream將字串進行編寫和送出
-//
-//					writer = new PrintStream(m_socket.getOutputStream());// 由於是將資料編寫並送出，所以是Output
-//
-////					int[][] mStringArray = { { 10, 20 }, { 30, 40 } };
-//					while (true) {
-////						JSONArray mJSONArray = new JSONArray(Arrays.asList(mStringArray));
-//						JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
-//
-////		    		JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
-//						System.out.println(mJSONArray.toString());
-//
-//						writer.println(mJSONArray.toString());// 將資料編寫進串流內
-//						writer.flush();// 清空緩衝區並送出資料
-//						try {
-//							Thread.sleep(3000);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-////					m_socket.close();// 關閉連線
-//				} catch (IOException e) {
-//					System.out.println(e.getMessage());// 出現例外時，捕捉並顯示例外訊息(連線成功不會出現例外)
-//				}
+//				傳給Bob
+
+				try {
+					// 送出端的編寫必須和接收端的接收Class相同
+					// 使用Socket的getInputStream()和getOutputStream()進行接收和發送資料
+					// 想要寫入字串可以用 PrintStream；想要把各種基本資料型態，如 int, double...等的 "值" 輸出，可以用
+					// DataOutputStream；想要把整個物件 Serialize，則可以用 ObjectOutputStream。
+					PrintStream writer;// 在此我使用PrintStream將字串進行編寫和送出
+
+					writer = new PrintStream(m_socket.getOutputStream());// 由於是將資料編寫並送出，所以是Output
+
+//						JSONArray mJSONArray = new JSONArray(Arrays.asList(mStringArray));
+					JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
+
+//		    		JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
+					System.out.println(mJSONArray.toString());
+
+					writer.println(mJSONArray.toString());// 將資料編寫進串流內
+					writer.flush();// 清空緩衝區並送出資料
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+//					m_socket.close();// 關閉連線
+				} catch (IOException e) {
+					System.out.println(e.getMessage());// 出現例外時，捕捉並顯示例外訊息(連線成功不會出現例外)
+				}
 			}
 
 		} catch (IOException e) {
