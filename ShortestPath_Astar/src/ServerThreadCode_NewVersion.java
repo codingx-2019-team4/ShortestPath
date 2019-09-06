@@ -1,54 +1,44 @@
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
-
-import javax.imageio.ImageIO;
-
 import org.json.JSONArray;
 
 import A_star_algorithm.Information;
 import A_star_algorithm.Path;
 
 public class ServerThreadCode_NewVersion extends Thread {
-	private Socket m_socket;// Server和Client之間的連線通道
+	private Socket m_socket;// ServerLin 和 app client的連接通道，當算完最短路徑後會透過此通道傳輸路徑
 	public int[][] pathMap = null;
 
 	public ServerThreadCode_NewVersion(Socket m_socket) {
-//		this.pathMap = pathMap;
 		this.m_socket = m_socket;
 	}
 
 	@Override
 	public void run()// 覆寫Thread內的run()方法
 	{
-		System.out.println("ininin");
-		Socket client2 = new Socket();
+//		client為接收人位置的socket
 
-		InetSocketAddress isa2 = new InetSocketAddress("192.168.208.150", 8035);
+		System.out.println("ininin");
+		Socket client = new Socket();
+		InetSocketAddress isa = new InetSocketAddress("192.168.208.150", 8035);
 		try {
-			client2.connect(isa2, 10000);
+			client.connect(isa, 10000);
 			System.out.println("conect?");
 			BufferedInputStream in = null;
-			DataInputStream dout = new DataInputStream(client2.getInputStream());
+			DataInputStream dout = new DataInputStream(client.getInputStream());
 
 			while (true) {
 				System.out.println("Wait for data～");
-				in = new java.io.BufferedInputStream(client2.getInputStream());
+				in = new java.io.BufferedInputStream(client.getInputStream());
 				String receive = dout.readUTF();
 				System.out.print(receive);
-//				receive.split(" ");
-//				位置為公分
+//				位置為公分，解析度為一個pixel 5公分
 				int originX = (int) (Integer.parseInt(receive.split(" ")[0]) / 5);
 				int originY = (int) (Integer.parseInt(receive.split(" ")[1]) / 5);
 
@@ -57,13 +47,14 @@ public class ServerThreadCode_NewVersion extends Thread {
 				Information mapData = path.getInformation();
 //				path.setMapFileName("fireHouse2.pgm");
 				path.setMapFileName("fireHouse2_cut.jpg");
-				System.out.println("after goal:" + mapData.goal.size());
 				System.out.println(mapData.getMapHeight() + " " + mapData.getMapWidth());
-				int[] start = { -originY, -originX };
-				mapData.setStart(start);
+
+//				由於此演算法中地圖的原點(左上角，往右x+，往下y+)與傳入的位置原點(原圖的正中央且此演算法還裁剪過，故原點位置並非在裁剪後地圖的正中央)不同，故需標記原地圖原點的位置並將傳入進來的值加上去
+				int[] startOffset = { -originY, -originX };
+				mapData.setStart(startOffset);
 				int[][] pathMap = path.findShortestPath();
-//				
-//				傳給Bob
+
+//				最短路徑pathMap傳給手機app端
 
 				try {
 					// 送出端的編寫必須和接收端的接收Class相同
@@ -74,10 +65,7 @@ public class ServerThreadCode_NewVersion extends Thread {
 
 					writer = new PrintStream(m_socket.getOutputStream());// 由於是將資料編寫並送出，所以是Output
 
-//						JSONArray mJSONArray = new JSONArray(Arrays.asList(mStringArray));
 					JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
-
-//		    		JSONArray mJSONArray = new JSONArray(Arrays.asList(pathMap));
 					System.out.println(mJSONArray.toString());
 
 					writer.println(mJSONArray.toString());// 將資料編寫進串流內
@@ -88,8 +76,6 @@ public class ServerThreadCode_NewVersion extends Thread {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-//					m_socket.close();// 關閉連線
 				} catch (IOException e) {
 					System.out.println(e.getMessage());// 出現例外時，捕捉並顯示例外訊息(連線成功不會出現例外)
 				}

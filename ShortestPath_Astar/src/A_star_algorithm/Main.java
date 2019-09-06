@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Main {
+public class Main {    //計算完路徑後跟app連接，直接傳給app
 	private static ServerSocket m_serverSocket;// 伺服器端的Socket，接收Client端的連線
 	private static Socket m_socket;// Server和Client之間的連線通道
 
@@ -11,14 +11,19 @@ public class Main {
 		// TODO Auto-generated method stub
 		Path path = new Path();
 		Information mapData = path.getInformation();
+		
+//		可輸入pgm或是jpg檔
 //		path.setMapFileName("fireHouse2.pgm");
 		path.setMapFileName("fireHouse2_cut.jpg");
-		System.out.println("after goal:" + mapData.goal.size());
+
 		System.out.println(mapData.getMapHeight() + " " + mapData.getMapWidth());
+		
+//		設定起點、危險區域
 //		int[] a = {290,430};
 //		mapData.setStart(a);
 //		int[] dangerPoint = {85,330};
 //		mapData.setDangerZone(dangerPoint);
+		
 		int[][] pathMap = path.findShortestPath();
 		connectAPP(pathMap);
 	}

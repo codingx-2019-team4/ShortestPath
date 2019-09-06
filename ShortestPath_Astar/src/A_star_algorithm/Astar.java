@@ -2,8 +2,8 @@ package A_star_algorithm;
 import java.util.LinkedList;
 
 public class Astar {
-	public SpotSort openList; // 待處理的點
-	public SpotSort closedList; // 不需要再次檢查的點
+	public SpotSort openList;   // 待處理的點
+	public SpotSort closedList; // 選擇過、不需要再次檢查的點
 	public Spot[][] map = null;
 
 	public Astar(Spot[][] map) {
@@ -33,6 +33,8 @@ public class Astar {
 	}
 
 	public LinkedList<Spot> findPath(Spot start, Spot goal) {
+		
+//		初始化，將起點送進openList並計算g h 值
 		openList = new SpotSort();
 		openList.push(start);
 		start.g = 0;
@@ -41,7 +43,7 @@ public class Astar {
 		closedList = new SpotSort();
 		Spot spot = null; // 每次f值最小的點
 
-//		當openList裡沒有元素時代表找不到路徑
+//		當openList裡沒有元素時代表找不到路徑(無路可走)
 		while (openList.length() != 0) {
 			spot = openList.getFirst();
 			closedList.push(spot);
@@ -108,8 +110,6 @@ public class Astar {
 		LinkedList<Spot> neightbours = new LinkedList<Spot>();
 		int posRow = spot.getCoordinate(0);
 		int posCol = spot.getCoordinate(1);
-//		System.out.println(posRow + " " + posCol);
-//		System.out.println("--------------------");
 //		逆時針加入鄰居
 		
 //		上鄰居

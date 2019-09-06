@@ -1,16 +1,7 @@
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-
-import org.json.JSONArray;
 
 public class ServerLin {
 	public static void main(String[] args) throws Exception {
@@ -32,6 +23,7 @@ class ServerMainThread extends Thread {
 			while (true) {
 				m_socket = m_serverSocket.accept();// 等待伺服器端的連線，若未連線則程式一直停在這裡
 				System.out.println("連線成功！");
+//				將此server和app連接的通道放入另一個Thread中，當那個Thread計算完路徑後透過這個通道傳送最短路徑
 				new Thread(new ServerThreadCode_NewVersion(m_socket)).start();// 建立物件，傳入Port並執行等待接受連線的動作
 			}
 		} catch (IOException e) {
