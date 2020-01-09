@@ -1,5 +1,7 @@
 # ShortestPath
 
+The features of each class:
+
 FindShortestPath : the main class.
 
 Astar.java : A* algorithm
